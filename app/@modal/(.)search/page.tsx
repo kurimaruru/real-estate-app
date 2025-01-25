@@ -70,6 +70,7 @@ export default function SearchModal() {
       area: data.area === "all" ? "" : data.area,
     };
     console.log(apiParams);
+    router.back();
   };
 
   return (
