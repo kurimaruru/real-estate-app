@@ -1,8 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -34,6 +33,7 @@ const searchFormSchema = z.object({
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 export default function SearchModal() {
+  const [open, setOpen] = useState(true);
   const currentYear = new Date().getFullYear();
   const router = useRouter();
 
@@ -69,15 +69,24 @@ export default function SearchModal() {
       quarter: data.quarter === "all" ? "" : data.quarter,
       area: data.area === "all" ? "" : data.area,
     };
-    console.log(apiParams);
-    router.back();
+
+    // URLSearchParamsを使用してクエリ文字列を構築
+    const searchParams = new URLSearchParams();
+    Object.entries(apiParams).forEach(([key, value]) => {
+      if (value) searchParams.append(key, value.toString());
+    });
+
+    // 検索結果ページへ遷移
+    router.push(`search/results?${searchParams.toString()}`);
+    setOpen(false);
   };
+
   const handleClose = (e?: any) => {
     e?.preventDefault();
     router.back();
   };
   return (
-    <Dialog open onOpenChange={() => router.back()}>
+    <Dialog open={open} onOpenChange={() => router.back()}>
       <div className="fixed inset-0 bg-black/25" />
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
