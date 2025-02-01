@@ -1,160 +1,105 @@
-"use client";
-import Link from "next/link";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, Search, Building2, Bell, Heart } from "lucide-react";
 
 export default function Home() {
-  const priceData = [
-    { month: "2023-01", price: 35000000, transactions: 120 },
-    { month: "2023-02", price: 36500000, transactions: 115 },
-    { month: "2023-03", price: 35800000, transactions: 125 },
-    { month: "2023-04", price: 37200000, transactions: 118 },
-    { month: "2023-05", price: 38100000, transactions: 130 },
-    { month: "2023-06", price: 38500000, transactions: 122 },
-  ];
-
-  const demographicData = [
-    { year: "2020", population: 150000, households: 65000 },
-    { year: "2021", population: 152000, households: 66500 },
-    { year: "2022", population: 153500, households: 67800 },
-    { year: "2023", population: 155000, households: 69000 },
-  ];
-
-  const ageVsPriceData = [
-    { age: 2, price: 45000000 },
-    { age: 5, price: 42000000 },
-    { age: 8, price: 38000000 },
-    { age: 10, price: 35000000 },
-    { age: 12, price: 33000000 },
-    { age: 15, price: 30000000 },
-    { age: 18, price: 28000000 },
-    { age: 20, price: 26000000 },
-    { age: 25, price: 24000000 },
-    { age: 30, price: 22000000 },
-  ];
   return (
-    <div className="p-4 w-full max-w-full">
-      <Link
-        href="/search"
-        className="px-4 py-2 bg-blue-600 text-white rounded-md"
-      >
-        不動産価格を検索
-      </Link>
-      <div className="space-y-4 p-4 w-full max-w-full">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>平均成約価格推移</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-[70vw]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={priceData}
-                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="price"
-                    stroke="#2563eb"
-                    name="成約価格"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="w-[80vw] h-[80vh] bg-gray-50">
+      {/* ヘッダー */}
+      <header className="bg-white shadow">
+        <div className="px-4 py-6">
+          <h1 className="text-2xl font-bold text-gray-900">不動産市場分析</h1>
+        </div>
+      </header>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>月間取引件数</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={priceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="transactions" fill="#3b82f6" name="取引件数" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+      <main className="px-4 py-6">
+        {/* 統計サマリー */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <Card className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                平均成約価格
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">3,850万円</div>
+              <p className="text-xs text-green-600">前月比 +1.2%</p>
+            </CardContent>
+          </Card>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>人口・世帯数推移</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={demographicData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="population"
-                    stroke="#2563eb"
-                    name="人口"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="households"
-                    stroke="#7c3aed"
-                    name="世帯数"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+          <Card className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                月間取引件数
+              </CardTitle>
+              <Building2 className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">122件</div>
+              <p className="text-xs text-muted-foreground">前月比 -6.2%</p>
+            </CardContent>
+          </Card>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>築年数と価格の関係</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart
-                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="age" name="築年数" unit="年" />
-                  <YAxis dataKey="price" name="価格" unit="円" />
-                  <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-                  <Legend />
-                  <Scatter name="物件" data={ageVsPriceData} fill="#3b82f6" />
-                </ScatterChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <Card className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">登録物件数</CardTitle>
+              <Building2 className="h-4 w-4 text-purple-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">1,453件</div>
+              <p className="text-xs text-purple-600">新着 48件</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* クイックアクション */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>クイックアクション</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <button className="flex items-center justify-center gap-2 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                  <Search className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm font-medium">物件検索</span>
+                </button>
+                <button className="flex items-center justify-center gap-2 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                  <Heart className="h-5 w-5 text-red-600" />
+                  <span className="text-sm font-medium">お気に入り</span>
+                </button>
+                <button className="flex items-center justify-center gap-2 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                  <Bell className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm font-medium">アラート設定</span>
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>価格上昇率TOP3エリア</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">1. 渋谷区</span>
+                  <span className="text-green-600">+5.8%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">2. 中央区</span>
+                  <span className="text-green-600">+4.2%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">3. 港区</span>
+                  <span className="text-green-600">+3.9%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 }
