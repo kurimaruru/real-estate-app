@@ -1,8 +1,19 @@
+"use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Search, Building2, Bell, Heart } from "lucide-react";
+import {
+  TrendingUp,
+  Search,
+  Building2,
+  Bell,
+  Heart,
+  Bookmark,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <div className="w-[80vw] h-[80vh] bg-gray-50">
       {/* ヘッダー */}
@@ -61,9 +72,19 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <button className="flex items-center justify-center gap-2 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <button
+                  className="flex items-center justify-center gap-2 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                  onClick={() => router.push("/search")}
+                >
                   <Search className="h-5 w-5 text-blue-600" />
                   <span className="text-sm font-medium">物件検索</span>
+                </button>
+                <button
+                  className="flex items-center justify-center gap-2 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                  onClick={() => router.push("/saved-searches")}
+                >
+                  <Bookmark className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium">保存した検索条件</span>
                 </button>
                 <button className="flex items-center justify-center gap-2 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
                   <Heart className="h-5 w-5 text-red-600" />
