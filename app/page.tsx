@@ -15,11 +15,13 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="w-[80vw] h-[80vh] bg-gray-50">
+    <div className="w-[80vw] h-[80vh] bg-white dark:bg-gray-900 text-black dark:text-white">
       {/* ヘッダー */}
-      <header className="bg-white shadow">
+      <header className="bg-white dark:bg-gray-900 shadow ">
         <div className="px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900">不動産市場分析</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            不動産市場分析
+          </h1>
         </div>
       </header>
 
@@ -65,10 +67,12 @@ export default function Home() {
         </div>
 
         {/* クイックアクション */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 dark:text-black">
           <Card className="w-full">
             <CardHeader>
-              <CardTitle>クイックアクション</CardTitle>
+              <CardTitle className="dark:text-white">
+                クイックアクション
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
@@ -99,10 +103,10 @@ export default function Home() {
           </Card>
 
           <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="dark:text-white">
               <CardTitle>価格上昇率TOP3エリア</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="dark:text-white">
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">1. 渋谷区</span>
