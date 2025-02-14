@@ -123,7 +123,7 @@ export default function SearchModal() {
                     <SelectTrigger>
                       <SelectValue placeholder="都道府県を選択" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white dark:bg-gray-800">
                       <SelectItem value="all">すべて</SelectItem>
                       {prefectures.map((pref) => (
                         <SelectItem key={pref.code} value={pref.code}>
@@ -178,7 +178,7 @@ export default function SearchModal() {
                   <SelectTrigger>
                     <SelectValue placeholder="選択してください" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800">
                     <SelectItem value="all">すべて</SelectItem>
                     <SelectItem value="01">不動産取引価格情報のみ</SelectItem>
                     <SelectItem value="02">成約価格情報のみ</SelectItem>
@@ -195,7 +195,7 @@ export default function SearchModal() {
                 </button>
                 <button
                   type="button"
-                  className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                  className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
                 >
                   条件追加
                 </button>
