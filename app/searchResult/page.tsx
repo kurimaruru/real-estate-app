@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { useEffect } from "react";
 
 export default function SearchResults({
   searchParams,
@@ -22,6 +23,14 @@ export default function SearchResults({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   console.log(searchParams);
+  useEffect(() => {
+    const fetcher = async () => {
+      const res = await fetch("/api/hello");
+      const result = await res.json();
+      console.log(result);
+    };
+    fetcher();
+  }, [searchParams]);
   const priceData = [
     { month: "2023-01", price: 35000000, transactions: 120 },
     { month: "2023-02", price: 36500000, transactions: 115 },

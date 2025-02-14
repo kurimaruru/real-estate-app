@@ -77,7 +77,7 @@ export default function SearchModal() {
     });
 
     // 検索結果ページへ遷移
-    router.push(`search/results?${searchParams.toString()}`);
+    router.push(`searchResult?${searchParams.toString()}`);
     setOpen(false);
   };
 
@@ -87,123 +87,118 @@ export default function SearchModal() {
   };
   return (
     <Dialog open={open} onOpenChange={() => router.back()}>
-      <div className="fixed inset-0 bg-black/25" />
-      <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <DialogContent
-            onEscapeKeyDown={handleClose}
-            onPointerDownOutside={handleClose}
+      <DialogContent
+        onEscapeKeyDown={handleClose}
+        onPointerDownOutside={handleClose}
+      >
+        <DialogTitle>不動産価格情報検索</DialogTitle>
+
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <RadioGroup
+            defaultValue="town"
+            onValueChange={(value) =>
+              form.setValue("searchType", value as "town" | "station")
+            }
           >
-            <DialogTitle>不動産価格情報検索</DialogTitle>
+            <div className="flex items-center space-x-2 py-1">
+              <RadioGroupItem value="town" id="r1" />
+              <Label>市町村から検索</Label>
+            </div>
+            <div className="flex items-center space-x-2 py-1">
+              <RadioGroupItem value="station" id="r2" />
+              <Label>路線・駅から検索</Label>
+            </div>
+          </RadioGroup>
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <RadioGroup
-                defaultValue="town"
-                onValueChange={(value) =>
-                  form.setValue("searchType", value as "town" | "station")
-                }
+          <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">都道府県</label>
+              <Select
+                onValueChange={(value) => form.setValue("area", value)}
+                defaultValue={form.getValues("area")}
               >
-                <div className="flex items-center space-x-2 py-1">
-                  <RadioGroupItem value="town" id="r1" />
-                  <Label>市町村から検索</Label>
-                </div>
-                <div className="flex items-center space-x-2 py-1">
-                  <RadioGroupItem value="station" id="r2" />
-                  <Label>路線・駅から検索</Label>
-                </div>
-              </RadioGroup>
+                <SelectTrigger>
+                  <SelectValue placeholder="都道府県を選択" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800">
+                  <SelectItem value="all">すべて</SelectItem>
+                  {prefectures.map((pref) => (
+                    <SelectItem key={pref.code} value={pref.code}>
+                      {pref.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">都道府県</label>
-                  <Select
-                    onValueChange={(value) => form.setValue("area", value)}
-                    defaultValue={form.getValues("area")}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="都道府県を選択" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white dark:bg-gray-800">
-                      <SelectItem value="all">すべて</SelectItem>
-                      {prefectures.map((pref) => (
-                        <SelectItem key={pref.code} value={pref.code}>
-                          {pref.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {form.watch("searchType") === "town" && (
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">市区町村</label>
-                    <Input
-                      {...form.register("city")}
-                      placeholder="例: 13101"
-                      className="w-full"
-                    />
-                  </div>
-                )}
-
-                {form.watch("searchType") === "station" && (
-                  <>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">路線</label>
-                      <Input
-                        {...form.register("line")}
-                        placeholder="例: 123456"
-                        className="w-full"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">駅</label>
-                      <Input
-                        {...form.register("station")}
-                        placeholder="例: 123456"
-                        className="w-full"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-
+            {form.watch("searchType") === "town" && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">価格情報区分</label>
-                <Select
-                  onValueChange={(value) =>
-                    form.setValue("priceClassification", value)
-                  }
-                  defaultValue={form.getValues("priceClassification")}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="選択してください" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800">
-                    <SelectItem value="all">すべて</SelectItem>
-                    <SelectItem value="01">不動産取引価格情報のみ</SelectItem>
-                    <SelectItem value="02">成約価格情報のみ</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="text-sm font-medium">市区町村</label>
+                <Input
+                  {...form.register("city")}
+                  placeholder="例: 13101"
+                  className="w-full"
+                />
               </div>
+            )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  検索
-                </button>
-                <button
-                  type="button"
-                  className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-                >
-                  条件追加
-                </button>
-              </div>
-            </form>
-          </DialogContent>
-        </div>
-      </div>
+            {form.watch("searchType") === "station" && (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">路線</label>
+                  <Input
+                    {...form.register("line")}
+                    placeholder="例: 123456"
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">駅</label>
+                  <Input
+                    {...form.register("station")}
+                    placeholder="例: 123456"
+                    className="w-full"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">価格情報区分</label>
+            <Select
+              onValueChange={(value) =>
+                form.setValue("priceClassification", value)
+              }
+              defaultValue={form.getValues("priceClassification")}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="選択してください" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-gray-800">
+                <SelectItem value="all">すべて</SelectItem>
+                <SelectItem value="01">不動産取引価格情報のみ</SelectItem>
+                <SelectItem value="02">成約価格情報のみ</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              検索
+            </button>
+            <button
+              type="button"
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+            >
+              条件追加
+            </button>
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
