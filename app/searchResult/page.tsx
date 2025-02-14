@@ -15,22 +15,29 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 
 export default function SearchResults({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  console.log(searchParams);
+  const params = use(searchParams);
   useEffect(() => {
     const fetcher = async () => {
-      const res = await fetch("/api/hello");
+      const queryParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (typeof value === "string") {
+          queryParams.append(key, value);
+        }
+      });
+
+      const res = await fetch(`/api/search?${queryParams.toString()}`);
       const result = await res.json();
       console.log(result);
     };
     fetcher();
-  }, [searchParams]);
+  }, [params]);
   const priceData = [
     { month: "2023-01", price: 35000000, transactions: 120 },
     { month: "2023-02", price: 36500000, transactions: 115 },

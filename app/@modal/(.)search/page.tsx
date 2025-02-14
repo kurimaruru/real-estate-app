@@ -62,12 +62,18 @@ export default function SearchModal() {
 
   const onSubmit = (data: SearchFormValues) => {
     // APIリクエスト時にallをから文字列に変換
+    // const apiParams = {
+    //   ...data,
+    //   priceClassification:
+    //     data.priceClassification === "all" ? "" : data.priceClassification,
+    //   quarter: data.quarter === "all" ? "" : data.quarter,
+    //   area: data.area === "all" ? "" : data.area,
+    // };
+    // TODO: 動的になるように修正
     const apiParams = {
-      ...data,
-      priceClassification:
-        data.priceClassification === "all" ? "" : data.priceClassification,
-      quarter: data.quarter === "all" ? "" : data.quarter,
-      area: data.area === "all" ? "" : data.area,
+      year: "2020",
+      area: "13",
+      city: "13101",
     };
 
     // URLSearchParamsを使用してクエリ文字列を構築
