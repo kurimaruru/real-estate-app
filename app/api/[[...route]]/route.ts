@@ -1,3 +1,4 @@
+import { filterSearchResult } from "@/utils/api/filterSearchResult";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -13,8 +14,9 @@ interface QueryParams {
 }
 
 app.get("/search", async (c) => {
+  const year = c.req.query("year");
   const query: QueryParams = {
-    year: c.req.query("year"),
+    year,
     area: c.req.query("area"),
     station: c.req.query("station"),
   };
@@ -43,9 +45,17 @@ app.get("/search", async (c) => {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
-
     const data = await response.json();
-    return c.json(data);
+
+    const filteredData = filterSearchResult(
+      year ?? "",
+      10,
+      20,
+      ["１ＬＤＫ"],
+      data.data
+    );
+
+    return c.json(filteredData);
   } catch (error) {
     if (error instanceof Error) {
       return c.json({ error: error.message }, 500);
