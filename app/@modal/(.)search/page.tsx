@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
@@ -33,9 +33,11 @@ const searchFormSchema = z.object({
 type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 export default function SearchModal() {
-  const [open, setOpen] = useState(true);
-  const currentYear = new Date().getFullYear();
   const router = useRouter();
+
+  const pathname = usePathname();
+  console.log(pathname);
+  const currentYear = new Date().getFullYear();
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
@@ -84,7 +86,6 @@ export default function SearchModal() {
 
     // 検索結果ページへ遷移
     router.push(`searchResult?${searchParams.toString()}`);
-    setOpen(false);
   };
 
   const handleClose = (e?: any) => {
@@ -92,7 +93,7 @@ export default function SearchModal() {
     router.back();
   };
   return (
-    <Dialog open={open} onOpenChange={() => router.back()}>
+    <Dialog open={pathname === "/search"} onOpenChange={() => router.back()}>
       <DialogContent
         onEscapeKeyDown={handleClose}
         onPointerDownOutside={handleClose}

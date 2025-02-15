@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import {
   LineChart,
   Line,
@@ -16,6 +15,8 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { use, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function SearchResults({
   searchParams,
@@ -32,9 +33,9 @@ export default function SearchResults({
         }
       });
 
-      const res = await fetch(`/api/search?${queryParams.toString()}`);
-      const result = await res.json();
-      console.log(result);
+      // const res = await fetch(`/api/search?${queryParams.toString()}`);
+      // const result = await res.json();
+      // console.log(result);
     };
     fetcher();
   }, [params]);
@@ -66,14 +67,18 @@ export default function SearchResults({
     { age: 25, price: 24000000 },
     { age: 30, price: 22000000 },
   ];
+  const router = useRouter();
+
   return (
     <div className="p-4 w-full max-w-full">
-      <Link
-        href="/search"
+      <Button
+        onClick={() => {
+          router.push("/search");
+        }}
         className="px-4 py-2 bg-blue-600 text-white rounded-md"
       >
         不動産価格を検索
-      </Link>
+      </Button>
       <div className="space-y-4 p-4 w-full max-w-full">
         <Card className="w-full">
           <CardHeader>
