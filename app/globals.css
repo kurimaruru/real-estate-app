@@ -79,3 +79,41 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+.hidden-scrollbar {
+  scrollbar-width: none; /* Firefox用 */
+  -ms-overflow-style: none; /* IE/Edge用 */
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera用 */
+}
+
+はい！スクロールバーをカスタマイズしてスタイリッシュにする方法をご紹介します。
+以下のスタイルをglobals.cssに追加することで、モダンでスタイリッシュなスクロールバーを実現できます：
+cssCopy/* スクロールバー全体のスタイル */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox用 */
+}
+
+/* Webkit（Chrome/Safari/Edge）用のスタイル */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* スクロールバーの幅 */
+}
+
+/* スクロールバーのトラック（背景）部分 */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+/* スクロールバーのつまみ部分 */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* ホバー時のつまみ部分 */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

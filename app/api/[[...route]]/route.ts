@@ -11,6 +11,7 @@ interface QueryParams {
   area?: string;
   city?: string;
   station?: string;
+  priceClassification?: string;
 }
 
 app.get("/search", async (c) => {
@@ -19,6 +20,8 @@ app.get("/search", async (c) => {
     year,
     area: c.req.query("area"),
     station: c.req.query("station"),
+    city: c.req.query("city"),
+    priceClassification: "02",
   };
 
   // 不要なundefinedのパラメータを削除
