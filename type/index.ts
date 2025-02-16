@@ -25,12 +25,10 @@ export type Prefectures =
 export const searchFormSchema = z.object({
   area: z.string(),
   city: z.string().optional(),
-  language: z.string(),
   searchType: z.enum(["town", "station"]),
-  line: z.string().optional(),
   layout: z.array(z.string()),
   builtYear: z.number().min(0).max(30),
-  stationCode: z.string(),
+  station: z.string(),
 });
 
 export type SearchFormValues = z.infer<typeof searchFormSchema>;

@@ -28,12 +28,10 @@ export default function SearchModal() {
     defaultValues: {
       area: "all",
       city: "",
-      language: "ja",
       searchType: "town",
-      line: "",
       layout: [],
       builtYear: 5,
-      stationCode: "",
+      station: "",
     },
   });
 
@@ -49,16 +47,17 @@ export default function SearchModal() {
     console.log("data", data);
     const apiParams = {
       year: "2020",
-      area: "13",
-      city: "13101",
-      layout: data.layout.join(","),
       builtYear: data.builtYear,
+      area: data.area,
+      city: data.layout,
+      layout: data.layout.join(","),
+      station: data.station,
     };
 
     // URLSearchParamsを使用してクエリ文字列を構築
     const searchParams = new URLSearchParams();
     Object.entries(apiParams).forEach(([key, value]) => {
-      if (value) searchParams.append(key, value.toString());
+      if (value || value !== "") searchParams.append(key, value.toString());
     });
 
     // 検索結果ページへ遷移

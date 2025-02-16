@@ -43,7 +43,7 @@ export const StationAccordion = (props: Props) => {
                     checked={station.code === selectedStation}
                     onChange={() => {
                       setSelectedStation(station.code);
-                      props.form.setValue("stationCode", station.code);
+                      props.form.setValue("station", station.code);
                     }}
                   />
                   <label

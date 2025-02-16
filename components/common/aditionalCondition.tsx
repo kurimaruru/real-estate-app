@@ -1,21 +1,16 @@
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+"use client";
 import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { UseFormReturn } from "react-hook-form";
 import { SearchFormValues } from "@/type";
+import { useState } from "react";
 
 type Props = {
   form: UseFormReturn<SearchFormValues>;
 };
 
 export const AditionalCondition = (props: Props) => {
+  const [selectedLayout, setSelectedLayout] = useState("1K/1DK/1LDK");
   const floarMapObj = [
     {
       key: "1K/1DK/1LDK",
@@ -44,18 +39,23 @@ export const AditionalCondition = (props: Props) => {
         <label className="text-sm font-medium">間取り</label>
         {floarMapObj.map((option) => (
           <div key={option.key} className="flex items-center space-x-2">
-            <Checkbox
+            <input
+              type="radio"
               id={option.key}
+              className="w-4 h-4 mr-3 rounded border-gray-300"
               value={option.val}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  props.form.setValue("layout", [...option.val]);
-                } else {
-                  props.form.setValue("layout", []);
-                }
+              checked={option.key === selectedLayout}
+              onChange={() => {
+                setSelectedLayout(option.key);
+                props.form.setValue("layout", option.val);
               }}
             />
-            <Label htmlFor={option.key}>{option.key}</Label>
+            <label
+              htmlFor={option.key}
+              className="flex justify-between w-full text-sm"
+            >
+              <span>{option.key}</span>
+            </label>
           </div>
         ))}
       </div>
@@ -64,7 +64,7 @@ export const AditionalCondition = (props: Props) => {
         <label className="text-sm font-medium">築年数</label>
         <div className="flex justify-between">
           <span>5年以内</span>
-          <span>30年以上</span>
+          <span>30年以内</span>
         </div>
         <Slider
           defaultValue={[5]}
@@ -82,7 +82,7 @@ export const AditionalCondition = (props: Props) => {
             props.form.watch("builtYear") === 0
               ? "5"
               : props.form.watch("builtYear")
-          }年${props.form.watch("builtYear") === 30 ? "以上" : "以内"}`}
+          }年以内`}
         </div>
       </div>
     </>
