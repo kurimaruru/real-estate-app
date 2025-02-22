@@ -89,21 +89,18 @@
   display: none; /* Chrome/Safari/Opera用 */
 }
 
-はい！スクロールバーをカスタマイズしてスタイリッシュにする方法をご紹介します。
-以下のスタイルをglobals.cssに追加することで、モダンでスタイリッシュなスクロールバーを実現できます：
-cssCopy/* スクロールバー全体のスタイル */
 .custom-scrollbar {
   scrollbar-width: thin; /* Firefox用 */
 }
 
 /* Webkit（Chrome/Safari/Edge）用のスタイル */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px; /* スクロールバーの幅 */
+  width: 3px; /* スクロールバーの幅 */
 }
 
 /* スクロールバーのトラック（背景）部分 */
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #fff1ff;
   border-radius: 3px;
 }
 

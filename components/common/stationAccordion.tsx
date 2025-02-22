@@ -6,6 +6,7 @@ import { UseFormReturn } from "react-hook-form";
 type Props = {
   company: Company;
   form: UseFormReturn<SearchFormValues>;
+  setPageIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const StationAccordion = (props: Props) => {
@@ -44,6 +45,7 @@ export const StationAccordion = (props: Props) => {
                     onChange={() => {
                       setSelectedStation(station.code);
                       props.form.setValue("station", station.code);
+                      props.setPageIndex(2);
                     }}
                   />
                   <label
