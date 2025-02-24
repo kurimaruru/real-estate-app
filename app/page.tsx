@@ -15,7 +15,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="w-[80vw] h-[80vh] bg-white dark:bg-gray-900 text-black dark:text-white">
+    <div className="w-[70vw] h-[80vh] bg-white dark:bg-gray-900 text-black dark:text-white">
       {/* ヘッダー */}
       <header className="bg-white dark:bg-gray-900 shadow ">
         <div className="px-4 py-6">

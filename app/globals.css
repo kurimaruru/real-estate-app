@@ -79,3 +79,38 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+.hidden-scrollbar {
+  scrollbar-width: none; /* Firefox用 */
+  -ms-overflow-style: none; /* IE/Edge用 */
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera用 */
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox用 */
+}
+
+/* Webkit（Chrome/Safari/Edge）用のスタイル */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px; /* スクロールバーの幅 */
+}
+
+/* スクロールバーのトラック（背景）部分 */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #fff1ff;
+  border-radius: 3px;
+}
+
+/* スクロールバーのつまみ部分 */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* ホバー時のつまみ部分 */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -8,9 +8,12 @@ const app = new Hono().basePath("/api");
 
 interface QueryParams {
   year?: string;
+  builtYear?: string;
   area?: string;
   city?: string;
   station?: string;
+  priceClassification?: string;
+  layout?: string;
 }
 
 app.get("/search", async (c) => {
@@ -19,6 +22,8 @@ app.get("/search", async (c) => {
     year,
     area: c.req.query("area"),
     station: c.req.query("station"),
+    city: c.req.query("city"),
+    priceClassification: "02",
   };
 
   // 不要なundefinedのパラメータを削除
@@ -45,14 +50,15 @@ app.get("/search", async (c) => {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
-    const data = await response.json();
+    const jsonData = await response.json();
 
     const filteredData = filterSearchResult(
       year ?? "",
-      10,
-      20,
+      0,
+      Number(c.req.query("builtYear")),
+      // c.req.query("layout"),
       ["１ＬＤＫ"],
-      data.data
+      jsonData.data
     );
 
     return c.json(filteredData);

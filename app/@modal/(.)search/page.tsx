@@ -1,87 +1,74 @@
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import React, { useEffect, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { usePathname, useRouter } from "next/navigation";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Input } from "@/components/ui/input";
 
-// 検証スキーマの定義
-const searchFormSchema = z.object({
-  priceClassification: z.string(),
-  year: z.string(),
-  quarter: z.string(),
-  area: z.string(),
-  city: z.string().optional(),
-  station: z.string().optional(),
-  language: z.string(),
-  searchType: z.enum(["town", "station"]),
-  line: z.string().optional(),
-});
-
-type SearchFormValues = z.infer<typeof searchFormSchema>;
+import {
+  Companies,
+  Prefectures,
+  searchFormSchema,
+  SearchFormValues,
+} from "@/type";
+import { WhichStationOrTown } from "@/components/common/whichStationOrTown";
+import { SelectTownOrStation } from "@/components/common/selectTownOrStation";
+import { AditionalCondition } from "@/components/common/aditionalCondition";
+import { SearchIcon } from "lucide-react";
+import { PrefectureAccordion } from "@/components/common/PrefectureAccordion";
+import { Button } from "@/components/ui/button";
 
 export default function SearchModal() {
   const router = useRouter();
+  const [selectedPrefectures, setSelectedPrefectures] =
+    useState<Prefectures>("tokyo");
+  const [stationCompanies, setStationCompanies] = useState<Companies>();
+  const [pageIndex, setPageIndex] = useState<number>(0);
+
+  const resetState = useCallback(() => {
+    setSelectedPrefectures("tokyo");
+    setStationCompanies(undefined);
+    setPageIndex(0);
+  }, []);
+
+  useEffect(() => {
+    import("@/utils/ui/kanto").then((module) => {
+      setStationCompanies(module[selectedPrefectures]);
+    });
+  }, [selectedPrefectures]);
 
   const pathname = usePathname();
-  console.log(pathname);
-  const currentYear = new Date().getFullYear();
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
     defaultValues: {
-      priceClassification: "all",
-      year: currentYear.toString(),
-      quarter: "all",
       area: "all",
       city: "",
-      station: "",
-      language: "ja",
       searchType: "town",
-      line: "",
+      layout: [],
+      builtYear: 5,
+      station: "",
     },
   });
 
-  // 都道府県データ（一部抜粋）
-  const prefectures = [
-    { code: "01", name: "北海道" },
-    { code: "13", name: "東京都" },
-    { code: "27", name: "大阪府" },
-    // 他の都道府県も同様に追加
-  ];
-
   const onSubmit = (data: SearchFormValues) => {
-    // APIリクエスト時にallをから文字列に変換
-    // const apiParams = {
-    //   ...data,
-    //   priceClassification:
-    //     data.priceClassification === "all" ? "" : data.priceClassification,
-    //   quarter: data.quarter === "all" ? "" : data.quarter,
-    //   area: data.area === "all" ? "" : data.area,
-    // };
-    // TODO: 動的になるように修正
+    console.log("data", data);
     const apiParams = {
       year: "2020",
-      area: "13",
-      city: "13101",
+      builtYear: data.builtYear,
+      area: data.area,
+      city: data.city,
+      layout: data.layout.join(","),
+      station: data.station,
     };
 
     // URLSearchParamsを使用してクエリ文字列を構築
     const searchParams = new URLSearchParams();
     Object.entries(apiParams).forEach(([key, value]) => {
-      if (value) searchParams.append(key, value.toString());
+      if (value !== undefined && value !== "")
+        searchParams.append(key, value.toString());
     });
 
     // 検索結果ページへ遷移
@@ -92,116 +79,65 @@ export default function SearchModal() {
     e?.preventDefault();
     router.back();
   };
+  const prefectures = [
+    // kanto
+    "tokyo",
+    "chiba",
+    "kanagawa",
+    "ibaragi",
+    "totigi",
+    "saitama",
+    "gunma",
+  ];
   return (
     <Dialog open={pathname === "/search"} onOpenChange={() => router.back()}>
       <DialogContent
         onEscapeKeyDown={handleClose}
         onPointerDownOutside={handleClose}
       >
-        <DialogTitle>不動産価格情報検索</DialogTitle>
-
+        <DialogTitle>
+          <SearchIcon className="inline-block mr-1" />
+          不動産価格情報検索
+        </DialogTitle>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <RadioGroup
-            defaultValue="town"
-            onValueChange={(value) =>
-              form.setValue("searchType", value as "town" | "station")
-            }
-          >
-            <div className="flex items-center space-x-2 py-1">
-              <RadioGroupItem value="town" id="r1" />
-              <Label>市町村から検索</Label>
-            </div>
-            <div className="flex items-center space-x-2 py-1">
-              <RadioGroupItem value="station" id="r2" />
-              <Label>路線・駅から検索</Label>
-            </div>
-          </RadioGroup>
-
-          <div className="grid grid-cols-1 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">都道府県</label>
-              <Select
-                onValueChange={(value) => form.setValue("area", value)}
-                defaultValue={form.getValues("area")}
+          <div className="px-4 h-[50vh] overflow-y-auto  hidden-scrollbar">
+            {pageIndex !== 0 && (
+              <Button
+                onClick={() => setPageIndex(pageIndex - 1)}
+                variant="link"
+                className="m-0 p-0 hover:text-blue-500"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="都道府県を選択" />
-                </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800">
-                  <SelectItem value="all">すべて</SelectItem>
-                  {prefectures.map((pref) => (
-                    <SelectItem key={pref.code} value={pref.code}>
-                      {pref.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {form.watch("searchType") === "town" && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium">市区町村</label>
-                <Input
-                  {...form.register("city")}
-                  placeholder="例: 13101"
-                  className="w-full"
-                />
-              </div>
+                ＜ 戻る
+              </Button>
             )}
-
-            {form.watch("searchType") === "station" && (
+            {pageIndex === 0 && (
               <>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">路線</label>
-                  <Input
-                    {...form.register("line")}
-                    placeholder="例: 123456"
-                    className="w-full"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">駅</label>
-                  <Input
-                    {...form.register("station")}
-                    placeholder="例: 123456"
-                    className="w-full"
-                  />
-                </div>
+                <WhichStationOrTown form={form} />
+                <label className="text-sm font-medium">都道府県</label>
+                <PrefectureAccordion
+                  prefecture={{ name: "Kanto", cities: prefectures }}
+                  setPageIndex={setPageIndex}
+                  setSelectedPrefectures={setSelectedPrefectures}
+                  form={form}
+                />
               </>
             )}
+            {pageIndex === 1 && (
+              <SelectTownOrStation
+                setSelectedPrefectures={setSelectedPrefectures}
+                form={form}
+                stationCompanies={stationCompanies}
+                setPageIndex={setPageIndex}
+              />
+            )}
+            {pageIndex === 2 && <AditionalCondition form={form} />}
           </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">価格情報区分</label>
-            <Select
-              onValueChange={(value) =>
-                form.setValue("priceClassification", value)
-              }
-              defaultValue={form.getValues("priceClassification")}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="選択してください" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-gray-800">
-                <SelectItem value="all">すべて</SelectItem>
-                <SelectItem value="01">不動産取引価格情報のみ</SelectItem>
-                <SelectItem value="02">成約価格情報のみ</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid ">
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
               検索
-            </button>
-            <button
-              type="button"
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-            >
-              条件追加
             </button>
           </div>
         </form>
