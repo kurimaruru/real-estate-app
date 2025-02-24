@@ -79,16 +79,7 @@ export default function SearchModal() {
     e?.preventDefault();
     router.back();
   };
-  const prefectures = [
-    // kanto
-    "tokyo",
-    "chiba",
-    "kanagawa",
-    "ibaragi",
-    "totigi",
-    "saitama",
-    "gunma",
-  ];
+
   return (
     <Dialog open={pathname === "/search"} onOpenChange={() => router.back()}>
       <DialogContent
@@ -115,7 +106,6 @@ export default function SearchModal() {
                 <WhichStationOrTown form={form} />
                 <label className="text-sm font-medium">都道府県</label>
                 <PrefectureAccordion
-                  prefecture={{ name: "Kanto", cities: prefectures }}
                   setPageIndex={setPageIndex}
                   setSelectedPrefectures={setSelectedPrefectures}
                   form={form}
