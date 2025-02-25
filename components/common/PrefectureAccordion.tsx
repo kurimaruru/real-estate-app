@@ -59,13 +59,10 @@ export const PrefectureAccordion = ({
                     id={prefecture.code}
                     className="w-4 h-4 mr-3 rounded border-gray-300"
                     value={prefecture.code}
-                    // checked={station.code === selectedStation}
                     onChange={(e) => {
                       setPageIndex(1);
-                      form.setValue("area", e.currentTarget.value);
-                      setSelectedPrefectures(
-                        e.currentTarget.value as Prefectures
-                      );
+                      form.setValue("area", prefecture.code);
+                      setSelectedPrefectures(prefecture.name as Prefectures);
                     }}
                   />
                   <label
