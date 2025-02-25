@@ -14,13 +14,14 @@ export type Company = {
 };
 
 export type Prefectures =
-  | "tokyo"
-  | "chiba"
-  | "kanagawa"
-  | "ibaragi"
-  | "totigi"
-  | "saitama"
-  | "gunma";
+  | "Tokyo"
+  | "Chiba"
+  | "Kanagawa"
+  | "Ibaraki"
+  | "Tochigi"
+  | "Saitama"
+  | "Gunma"
+  | "";
 
 export const searchFormSchema = z.object({
   area: z.string(),
@@ -32,3 +33,12 @@ export const searchFormSchema = z.object({
 });
 
 export type SearchFormValues = z.infer<typeof searchFormSchema>;
+
+export type City = {
+  id: string;
+  name: string;
+};
+
+export type Cities = {
+  cities: City[];
+};

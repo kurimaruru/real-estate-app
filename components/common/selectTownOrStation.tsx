@@ -1,35 +1,30 @@
-import { Input } from "@/components/ui/input";
 import { StationAccordion } from "./stationAccordion";
-import { Companies, Prefectures, SearchFormValues } from "@/type";
+import { Cities, Companies, Prefectures, SearchFormValues } from "@/type";
 import { UseFormReturn } from "react-hook-form";
 
 type Props = {
-  setSelectedPrefectures: React.Dispatch<React.SetStateAction<Prefectures>>;
   form: UseFormReturn<SearchFormValues>;
   stationCompanies: Companies | undefined;
+  cities: Cities | undefined;
   setPageIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 export const SelectTownOrStation = (props: Props) => {
-  const cities = [
-    { name: "Hamura", code: "1" },
-    { name: "Fussa", code: "2" },
-    { name: "Akisima", code: "3" },
-  ];
   return (
     <>
-      <div className="space-y-2">市町村を選択</div>
+      {props.form.watch("searchType") === "town" && (
+        <div className="space-y-2">市町村を選択</div>
+      )}
       {props.form.watch("searchType") === "town" &&
-        cities.map((city) => (
-          <div className="flex items-center px-4 py-2" key={city.code}>
+        props.cities?.cities.map((city) => (
+          <div className="flex items-center px-4 py-2" key={city.id}>
             <input
               type="radio"
               id={city.name}
               className="w-4 h-4 mr-3 rounded border-gray-300"
-              value={city.code}
-              // checked={station.code === selectedStation}
+              value={city.id}
               onChange={(e) => {
                 props.setPageIndex(2);
-                props.form.setValue("city", city.code);
+                props.form.setValue("city", city.id);
               }}
             />
             <label
