@@ -72,7 +72,7 @@ export default function SearchModal() {
       builtYear: data.builtYear,
       area: data.area,
       city: data.city,
-      layout: data.layout.join(","),
+      layout: data.layout.join(""),
       station: data.station,
     };
 
@@ -85,6 +85,7 @@ export default function SearchModal() {
 
     // 検索結果ページへ遷移
     router.push(`searchResult?${searchParams.toString()}`);
+    resetState();
   };
 
   const handleClose = (e?: any) => {
@@ -149,7 +150,6 @@ export default function SearchModal() {
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                onClick={() => resetState()}
               >
                 検索
               </button>

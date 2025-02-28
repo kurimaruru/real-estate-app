@@ -1,186 +1,82 @@
-"use client";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { PriceChart } from "@/components/common/priceChart";
+import Link from "next/link";
+import { headers } from "next/headers";
 
-export default function SearchResults({
+export default async function SearchResults({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const params = use(searchParams);
-  useEffect(() => {
-    const fetcher = async () => {
-      const queryParams = new URLSearchParams();
-      Object.entries(params).forEach(([key, value]) => {
-        if (typeof value === "string") {
-          queryParams.append(key, value);
-        }
-      });
+  const params = await searchParams;
+  // サーバー側のホスト情報を取得
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
-      // const res = await fetch(`/api/search?${queryParams.toString()}`);
-      // const result = await res.json();
-      // console.log(result);
-    };
-    fetcher();
-  }, [params]);
-  const priceData = [
-    { month: "2023-01", price: 35000000, transactions: 120 },
-    { month: "2023-02", price: 36500000, transactions: 115 },
-    { month: "2023-03", price: 35800000, transactions: 125 },
-    { month: "2023-04", price: 37200000, transactions: 118 },
-    { month: "2023-05", price: 38100000, transactions: 130 },
-    { month: "2023-06", price: 38500000, transactions: 122 },
-  ];
+  // クエリパラメータの構築
+  const queryParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (typeof value === "string") {
+      queryParams.append(key, value);
+    } else if (Array.isArray(value)) {
+      value.forEach((val) => queryParams.append(key, val));
+    } else {
+      console.warn(`無効な値: ${key} = ${value}`);
+    }
+  });
 
-  const demographicData = [
-    { year: "2020", population: 150000, households: 65000 },
-    { year: "2021", population: 152000, households: 66500 },
-    { year: "2022", population: 153500, households: 67800 },
-    { year: "2023", population: 155000, households: 69000 },
-  ];
+  const queryString = queryParams.toString();
+  console.log(`クエリパラメータ: ${queryString}`);
 
-  const ageVsPriceData = [
-    { age: 2, price: 45000000 },
-    { age: 5, price: 42000000 },
-    { age: 8, price: 38000000 },
-    { age: 10, price: 35000000 },
-    { age: 12, price: 33000000 },
-    { age: 15, price: 30000000 },
-    { age: 18, price: 28000000 },
-    { age: 20, price: 26000000 },
-    { age: 25, price: 24000000 },
-    { age: 30, price: 22000000 },
-  ];
-  const router = useRouter();
+  // 絶対URLを使用してAPIを呼び出す
+  const apiUrl = `${protocol}://${host}/api/search?${queryString}`;
+  console.log(`APIリクエストURL: ${apiUrl}`);
+
+  let result;
+  let error = null;
+
+  try {
+    const res = await fetch(apiUrl, { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error(`APIエラー: ${res.status} ${res.statusText}`);
+    }
+    result = await res.json();
+    console.log("API結果:", result);
+  } catch (err) {
+    console.error("データ取得エラー:", err);
+    error = err instanceof Error ? err.message : "不明なエラーが発生しました";
+  }
 
   return (
     <div className="p-4 w-full max-w-full">
-      <Button
-        onClick={() => {
-          router.push("/search");
-        }}
-        className="px-4 py-2 bg-blue-600 text-white rounded-md"
-      >
-        不動産価格を検索
-      </Button>
-      <div className="space-y-4 p-4 w-full max-w-full">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>平均成約価格推移</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-[70vw]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={priceData}
-                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="price"
-                    stroke="#2563eb"
-                    name="成約価格"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+      <Link href="/search">
+        <Button className="px-4 py-2 bg-blue-600 text-white rounded-md">
+          不動産価格を検索
+        </Button>
+      </Link>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>月間取引件数</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={priceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="transactions" fill="#3b82f6" name="取引件数" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 text-red-800 rounded-md">
+          エラー: {error}
+        </div>
+      )}
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>人口・世帯数推移</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={demographicData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="population"
-                    stroke="#2563eb"
-                    name="人口"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="households"
-                    stroke="#7c3aed"
-                    name="世帯数"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>築年数と価格の関係</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart
-                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="age" name="築年数" unit="年" />
-                  <YAxis dataKey="price" name="価格" unit="円" />
-                  <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-                  <Legend />
-                  <Scatter name="物件" data={ageVsPriceData} fill="#3b82f6" />
-                </ScatterChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {result ? (
+        <div className="mt-4">
+          <PriceChartWrapper data={result} />
+        </div>
+      ) : (
+        !error && <div className="mt-4">データがありません</div>
+      )}
     </div>
   );
 }
+
+// クライアントコンポーネントをサーバーコンポーネント内で使用するためのラッパー
+const PriceChartWrapper = ({ data }: { data: any }) => {
+  // クライアントコンポーネントに渡すためのプロップとしてデータを準備
+  // このコンポーネントはサーバーコンポーネントからのデータを受け取り、
+  // クライアントコンポーネントであるPriceChartに渡す中間コンポーネントです
+  return <PriceChart />;
+};

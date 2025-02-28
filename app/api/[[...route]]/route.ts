@@ -1,6 +1,7 @@
 import { filterSearchResult } from "@/utils/api/filterSearchResult";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import { headers } from "next/headers";
 
 export const runtime = "edge";
 
@@ -23,7 +24,6 @@ app.get("/search", async (c) => {
     area: c.req.query("area"),
     station: c.req.query("station"),
     city: c.req.query("city"),
-    priceClassification: "02",
   };
 
   // 不要なundefinedのパラメータを削除
@@ -43,6 +43,7 @@ app.get("/search", async (c) => {
     ).toString();
     const url = `${process.env.API_URL}?${queryString}`;
 
+    console.log("###", headers);
     const response = await fetch(url, {
       headers,
     });
@@ -51,6 +52,7 @@ app.get("/search", async (c) => {
       throw new Error(`API request failed with status ${response.status}`);
     }
     const jsonData = await response.json();
+    console.log("★★★★★★", jsonData);
 
     const filteredData = filterSearchResult(
       year ?? "",
