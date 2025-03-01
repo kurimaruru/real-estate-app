@@ -37,7 +37,7 @@ export default function RootLayout({
           <SidebarProvider>
             <div className="flex min-h-screen">
               <AppSidebar />
-              <main className="min-h-screen w-full p-4">
+              <main className="p-4">
                 <div className="flex items-center gap-2">
                   <SidebarTrigger />
                   <ThemeToggle />
