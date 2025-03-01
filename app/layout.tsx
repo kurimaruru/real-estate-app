@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "../components/common/sidebar";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "../components/common/ThemeToggle";
+import { AuthProvider } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,21 +34,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class">
-          <SidebarProvider>
-            <div className="flex min-h-screen">
-              <AppSidebar />
-              <main className="p-4">
-                <div className="flex items-center gap-2">
-                  <SidebarTrigger />
-                  <ThemeToggle />
-                </div>
-                {modal}
-                {children}
-              </main>
-            </div>
-          </SidebarProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class">
+            <SidebarProvider>
+              <div className="flex min-h-screen">
+                <AppSidebar />
+                <main className="p-4">
+                  <div className="flex items-center gap-2">
+                    <SidebarTrigger />
+                    <ThemeToggle />
+                  </div>
+                  {modal}
+                  {children}
+                </main>
+              </div>
+            </SidebarProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
