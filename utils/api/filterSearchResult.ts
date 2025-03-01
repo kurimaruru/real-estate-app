@@ -7,10 +7,13 @@ export const filterSearchResult = (
   data: any[]
 ) => {
   // 築年数、間取りでフィルター
+  console.log("args", year, min, max, floorPlans);
   return data.filter((d, i) => {
     const builtYear = Number(year) - Number(d.BuildingYear.replace("年", ""));
     const isInYearRange = min <= builtYear && builtYear <= max;
+    console.log(isInYearRange);
     const isMatchFloorPlan = floorPlans.includes(d.FloorPlan);
+    console.log(isMatchFloorPlan);
 
     return isInYearRange && isMatchFloorPlan;
   });

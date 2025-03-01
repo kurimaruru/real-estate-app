@@ -48,6 +48,7 @@ export default function SearchModal() {
   const resetState = useCallback(() => {
     setSelectedPrefectures("");
     setStationCompanies(undefined);
+    setCities(undefined);
     setPageIndex(0);
   }, []);
 
@@ -64,15 +65,18 @@ export default function SearchModal() {
   }, [selectedPrefectures]);
 
   const pathname = usePathname();
-
+  const [isOpen, setIsOpen] = useState(pathname === "/search");
+  useEffect(() => {
+    setIsOpen(pathname === "/search");
+  }, [pathname]);
   const onSubmit = (data: SearchFormValues) => {
     console.log("data", data);
     const apiParams = {
-      year: "2020",
+      year: "2024",
       builtYear: data.builtYear,
       area: data.area,
       city: data.city,
-      layout: data.layout.join(","),
+      layout: data.layout.join(""),
       station: data.station,
     };
 
@@ -82,7 +86,7 @@ export default function SearchModal() {
       if (value !== undefined && value !== "")
         searchParams.append(key, value.toString());
     });
-
+    setIsOpen(false);
     // 検索結果ページへ遷移
     router.push(`searchResult?${searchParams.toString()}`);
   };
@@ -94,7 +98,7 @@ export default function SearchModal() {
   };
 
   return (
-    <Dialog open={pathname === "/search"} onOpenChange={() => router.back()}>
+    <Dialog open={isOpen} onOpenChange={() => router.back()}>
       <DialogContent
         onEscapeKeyDown={handleClose}
         onPointerDownOutside={handleClose}
@@ -149,7 +153,6 @@ export default function SearchModal() {
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                onClick={() => resetState()}
               >
                 検索
               </button>
