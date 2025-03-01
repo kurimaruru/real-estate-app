@@ -48,6 +48,7 @@ export default function SearchModal() {
   const resetState = useCallback(() => {
     setSelectedPrefectures("");
     setStationCompanies(undefined);
+    setCities(undefined);
     setPageIndex(0);
   }, []);
 
@@ -64,11 +65,14 @@ export default function SearchModal() {
   }, [selectedPrefectures]);
 
   const pathname = usePathname();
-
+  const [isOpen, setIsOpen] = useState(pathname === "/search");
+  useEffect(() => {
+    setIsOpen(pathname === "/search");
+  }, [pathname]);
   const onSubmit = (data: SearchFormValues) => {
     console.log("data", data);
     const apiParams = {
-      year: "2020",
+      year: "2024",
       builtYear: data.builtYear,
       area: data.area,
       city: data.city,
@@ -82,10 +86,9 @@ export default function SearchModal() {
       if (value !== undefined && value !== "")
         searchParams.append(key, value.toString());
     });
-
+    setIsOpen(false);
     // 検索結果ページへ遷移
     router.push(`searchResult?${searchParams.toString()}`);
-    resetState();
   };
 
   const handleClose = (e?: any) => {
@@ -95,7 +98,7 @@ export default function SearchModal() {
   };
 
   return (
-    <Dialog open={pathname === "/search"} onOpenChange={() => router.back()}>
+    <Dialog open={isOpen} onOpenChange={() => router.back()}>
       <DialogContent
         onEscapeKeyDown={handleClose}
         onPointerDownOutside={handleClose}

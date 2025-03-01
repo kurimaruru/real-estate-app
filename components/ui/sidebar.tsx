@@ -178,7 +178,6 @@ const Sidebar = React.forwardRef<
     ref
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
-    const { data: session } = useSession();
 
     if (collapsible === "none") {
       return (
@@ -257,34 +256,6 @@ const Sidebar = React.forwardRef<
             className="flex h-full w-full flex-col bg-gray-100 opacity-95 group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
             {children}
-          </div>
-          <div className="mt-auto p-4">
-            {session ? (
-              <div className="space-y-4">
-                <div className="text-sm text-gray-600">
-                  ログイン中: {session.user?.name}
-                </div>
-                <button
-                  onClick={() => signOut()}
-                  className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
-                >
-                  ログアウト
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Link href="/auth/signin">
-                  <button className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                    ログイン
-                  </button>
-                </Link>
-                <Link href="/auth/signup">
-                  <button className="w-full py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
-                    新規登録
-                  </button>
-                </Link>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PriceChart } from "@/components/common/priceChart";
+import { PriceCharts } from "@/components/common/priceChart";
 import Link from "next/link";
 import { headers } from "next/headers";
 
@@ -61,14 +61,15 @@ export default async function SearchResults({
           エラー: {error}
         </div>
       )}
-
+      <PriceChartWrapper data={result} />
+      {/* 
       {result ? (
         <div className="mt-4">
           <PriceChartWrapper data={result} />
         </div>
       ) : (
         !error && <div className="mt-4">データがありません</div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -78,5 +79,5 @@ const PriceChartWrapper = ({ data }: { data: any }) => {
   // クライアントコンポーネントに渡すためのプロップとしてデータを準備
   // このコンポーネントはサーバーコンポーネントからのデータを受け取り、
   // クライアントコンポーネントであるPriceChartに渡す中間コンポーネントです
-  return <PriceChart />;
+  return <PriceCharts />;
 };
